@@ -7,15 +7,49 @@ string[,] matrix1 = {{" "," "," "," "," "," "},
                      {" "," "," "," ","$"," "},
                      {" "," "," "," "," "," "},
                      {" "," "," "," "," "," "}};
+Dictionary<int, string[,]> lvls =new Dictionary<int, string[,]> {{1, 
+new string[,]  {{" "," "," "," "," "," "},
+                {" ","|"," "," "," "," "},
+                {" ","|","@"," "," "," "},
+                {" "," "," "," ","$"," "},
+                {" "," "," "," "," "," "},
+                {" "," "," "," "," "," "}}},
+{2, 
+new string[,]  {{" "," "," "," "," "," "},
+                {" "," "," "," "," "," "},
+                {" ","|","@"," ","|"," "},
+                {" "," "," "," ","$"," "},
+                {" "," "," "," ","|"," "},
+                {" "," "," "," "," "," "}}},
+{3, 
+new string[,]  {{" "," "," "," "," "," "},
+                {" ","|"," "," ","|"," "},
+                {" "," ","@"," ","|"," "},
+                {" "," "," "," ","$"," "},
+                {" "," ","|"," ","|"," "},
+                {" "," "," "," "," "," "}}}};
 int coins = 0;
 int menuX = 0;
 int menuY = 0;
+int SelectLvlGame()
+{
+    Console.Write("Выберите уровень:");
+    foreach (var item in lvls)
+    {
+        Console.Write(item.Key + " ");
+    }
+    Console.WriteLine();
+    return int.Parse(Console.ReadLine());
+}
 int SelectMenuPlayer()
 {
     int indexMenu = 0;
+    Console.Clear();
+    MatrixWrite(menu);
     ConsoleKeyInfo userKeyTab = Console.ReadKey();
     while(userKeyTab.Key != ConsoleKey.Enter)
     {
+        Console.Clear();
         menu[menuY,menuX] = " ";
         if (userKeyTab.Key == ConsoleKey.W && indexMenu > 0)
         {
@@ -31,6 +65,7 @@ int SelectMenuPlayer()
         MatrixWrite(menu);
         userKeyTab = Console.ReadKey();
     }
+return indexMenu;
 }
 void MatrixWrite(string[,] matrix)
 {
@@ -73,8 +108,10 @@ bool Barier(int x, int y)
 
 int x = 2;
 int y = 2;
-while (true)
+void Game()
 {
+    while(true)
+    {
     Console.Clear();
     MatrixWrite(matrix1);
     matrix1[y,x] = " ";
@@ -85,10 +122,32 @@ while (true)
     if(userKeyTab.Key == ConsoleKey.D) if(Barier(x+1,y))x++;
 
     if(y >= matrix1.GetLength(0)) y = 0;
-    if(y <= 0) y = matrix1.GetLength(0)-1;
+    if(y <= 0) y = matrix1.GetLength(0);
     
     if(x >= matrix1.GetLength(1)) x = 0;
-    if(x <= 0) x = matrix1.GetLength(1)-1;
+    if(x <= 0) x = matrix1.GetLength(1);
     matrix1 = ItemFoodMatrix(x,y, matrix1);
     matrix1[y,x] = "@"; 
+    }
+}
+
+while (true)
+{
+    switch (SelectMenuPlayer())
+    {
+        case 0:
+            Console.Clear();
+            Game();
+            break;
+        case 1:
+            Console.Clear();
+            matrix1 = lvls[SelectLvlGame()];
+            Game();
+            break;
+        case 2:
+            Console.Clear();
+            break;
+        default:
+            break;
+    }
 }
